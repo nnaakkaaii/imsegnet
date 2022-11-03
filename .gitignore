@@ -3,3 +3,9 @@
 /__pycache__/
 inputs/
 data/
+
+*.log
+*.csv
+*.pth
+*.pt
+*.nii
