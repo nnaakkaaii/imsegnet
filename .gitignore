@@ -3,9 +3,12 @@
 /__pycache__/
 inputs/
 data/
+.data/
 
 *.log
 *.csv
 *.pth
 *.pt
 *.nii
+*.npz
+*.gz
