@@ -4,6 +4,7 @@
 inputs/
 data/
 .data/
+results/
 
 *.log
 *.csv
