@@ -25,11 +25,13 @@ class MovingMNIST(DatasetInterface):
                  tensor_transforms: list[TensorTransformInterface] | None = None,
                  phase: str = "train",
                  download: bool = False,
+                 limit: int | None = None,
                  ) -> None:
         assert phase in self.PHASES
         super().__init__()
 
         self.transform = self.transforms(pil_transforms, tensor_transforms)
+        self.limit = limit
 
         if download:
             self.__download(root_dir, split)
@@ -39,7 +41,7 @@ class MovingMNIST(DatasetInterface):
 
         if phase == "train":
             file = self.TRAIN_FILE
-        elif phase == "tset":
+        elif phase == "test":
             file = self.TEST_FILE
         else:
             raise RuntimeError("phase not supported")
@@ -55,7 +57,9 @@ class MovingMNIST(DatasetInterface):
         return ret[:10], ret[10:]
 
     def __len__(self) -> int:
-        return len(self.data)
+        if self.limit is None:
+            return len(self.data)
+        return min(self.limit, len(self.data))
 
     def __check_existence(self, root_dir: str) -> bool:
         return (
