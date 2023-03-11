@@ -38,3 +38,7 @@ class Interface(Dataset, metaclass=ABCMeta):
             _tensor_transforms = tensor_transforms
 
         return Compose(to_pil + _pil_transforms + to_tensor + _tensor_transforms)
+
+    @staticmethod
+    def vanilla_transforms():
+        return Compose([ToPil(), ToTensor()])

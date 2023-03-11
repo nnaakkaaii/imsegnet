@@ -31,6 +31,7 @@ class MovingMNIST(DatasetInterface):
         super().__init__()
 
         self.transform = self.transforms(pil_transforms, tensor_transforms)
+        self.vanilla_transform = self.vanilla_transforms()
         self.limit = limit
 
         if download:
@@ -48,13 +49,16 @@ class MovingMNIST(DatasetInterface):
 
         self.data = torch.load(os.path.join(root_dir, self.PROCESSED_FOLDER, file))
 
-    def __getitem__(self, index: int) -> tuple[Tensor, Tensor]:
+    def __getitem__(self, index: int) -> dict[str, Tensor]:
         def _transform_time(data: Tensor) -> Tensor:
             new_data = self.transform(list(data))
             return torch.cat(new_data, dim=0)
 
         ret = _transform_time(self.data[index])
-        return ret[:10], ret[10:]
+        return {
+            "x": ret[:10],
+            "t": ret[10:],
+        }
 
     def __len__(self) -> int:
         if self.limit is None:
@@ -111,4 +115,4 @@ if __name__ == "__main__":
                           download=True)
     print("Dataset length: %d" % len(dataset))
     dt = dataset[0]
-    print("Dataset size: ", dt[0].size(), dt[1].size())
+    print("Dataset size: ", dt["x"].size(), dt["t"].size())
