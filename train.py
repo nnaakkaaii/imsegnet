@@ -1,6 +1,7 @@
 import csv
 import json
 import os
+import uuid
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -34,6 +35,9 @@ def run(opts: dict[str, Any],
         debug: bool,
         **kwargs,
         ) -> float:
+    id_ = str(uuid.uuid4())
+    save_dir = save_dir / (datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + "_" + id_)
+
     os.makedirs(save_dir, exist_ok=True)
     device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
@@ -87,20 +91,16 @@ def run(opts: dict[str, Any],
         gamma=gamma,
         )
 
-    with open(save_dir / "result.csv", "a") as f:
+    with open(save_dir / "option.json", "w") as f:
+        json.dump(opts, f, indent=4)
+
+    with open(save_dir / "result.csv", "w") as f:
         csv.writer(f).writerow([
             "dt",
-            "opts",
             "epoch",
             "train_loss",
             "test_loss",
-            ])
-        csv.writer(f).writerow([
-            datetime.now(),
-            json.dumps(opts),
-            "",
-            "",
-            "",
+            "best_test_loss",
             ])
 
     best_test_loss = 1e8
@@ -109,9 +109,9 @@ def run(opts: dict[str, Any],
         model.train()
 
         train_losses = []
-        for x, t in tqdm(train_loader):
-            model.forward(x)
-            loss = model.backward(t)
+        for d in tqdm(train_loader):
+            model.forward(d["x"])
+            loss = model.backward(d["t"])
             train_losses.append(loss)
 
         scheduler.step()
@@ -120,9 +120,9 @@ def run(opts: dict[str, Any],
 
         test_losses = []
         with torch.no_grad():
-            for x, t in tqdm(test_loader):
-                model.forward(x)
-                loss = model.loss(t).item()
+            for d in tqdm(test_loader):
+                model.forward(d["x"])
+                loss = model.loss(d["t"]).item()
                 test_losses.append(loss)
 
         train_loss = float(np.mean(train_losses))
@@ -138,10 +138,10 @@ def run(opts: dict[str, Any],
         with open(save_dir / "result.csv", "a") as f:
             csv.writer(f).writerow([
                 datetime.now(),
-                "",
                 epoch,
                 train_loss,
                 test_loss,
+                best_test_loss,
                 ])
 
         if best_test_loss == test_loss:
@@ -172,7 +172,7 @@ if __name__ == "__main__":
                         )
     parser.add_argument("--save_dir",
                         type=str,
-                        default="./results/test01",
+                        default="./results",
                         )
     parser.add_argument("--model_name",
                         type=str,
