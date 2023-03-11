@@ -1,5 +1,4 @@
 from abc import ABCMeta, abstractmethod
-from typing import List, Tuple, Optional
 
 from torch import Tensor
 from torch.utils.data import Dataset
@@ -14,7 +13,7 @@ from ..transforms.type_transforms.to_pil import ToPil
 
 class Interface(Dataset, metaclass=ABCMeta):
     @abstractmethod
-    def __getitem__(self, item: int) -> Tuple[Tensor, Tensor]:
+    def __getitem__(self, item: int) -> tuple[Tensor, Tensor]:
         pass
 
     @abstractmethod
@@ -23,18 +22,18 @@ class Interface(Dataset, metaclass=ABCMeta):
 
     @staticmethod
     def transforms(
-            pil_transforms: Optional[List[PilTransformInterface]] = None,
-            tensor_transforms: Optional[List[TensorTransformInterface]] = None,
+            pil_transforms: list[PilTransformInterface] | None = None,
+            tensor_transforms: list[TensorTransformInterface] | None = None,
             ):
-        to_pil: List[TransformInterface] = [ToPil()]
+        to_pil: list[TransformInterface] = [ToPil()]
 
-        _pil_transforms: List[PilTransformInterface] = []
+        _pil_transforms: list[PilTransformInterface] = []
         if pil_transforms is not None:
             _pil_transforms = pil_transforms
 
-        to_tensor: List[TransformInterface] = [ToTensor()]
+        to_tensor: list[TransformInterface] = [ToTensor()]
 
-        _tensor_transforms: List[TensorTransformInterface] = []
+        _tensor_transforms: list[TensorTransformInterface] = []
         if tensor_transforms is not None:
             _tensor_transforms = tensor_transforms
 

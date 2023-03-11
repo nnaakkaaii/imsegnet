@@ -1,6 +1,5 @@
 import errno
 import os
-from typing import List, Optional, Tuple
 
 import numpy as np
 import torch
@@ -22,8 +21,8 @@ class MovingMNIST(DatasetInterface):
     def __init__(self,
                  root_dir: str,
                  split: int = 1000,
-                 pil_transforms: Optional[List[PilTransformInterface]] = None,
-                 tensor_transforms: Optional[List[TensorTransformInterface]] = None,
+                 pil_transforms: list[PilTransformInterface] | None = None,
+                 tensor_transforms: list[TensorTransformInterface] | None = None,
                  phase: str = "train",
                  download: bool = False,
                  ) -> None:
@@ -47,9 +46,9 @@ class MovingMNIST(DatasetInterface):
 
         self.data = torch.load(os.path.join(root_dir, self.PROCESSED_FOLDER, file))
 
-    def __getitem__(self, index: int) -> Tuple[Tensor, Tensor]:
+    def __getitem__(self, index: int) -> tuple[Tensor, Tensor]:
         def _transform_time(data: Tensor) -> Tensor:
-            new_data = self.transform([data[i] for i in range(data.size(0))])
+            new_data = self.transform(list(data))
             return torch.cat(new_data, dim=0)
 
         ret = _transform_time(self.data[index])
