@@ -4,7 +4,7 @@ import os
 import uuid
 from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Dict, List
 
 import numpy as np
 import torch
@@ -22,7 +22,7 @@ from imsegnet.transforms.tensor_transforms.random_crop import RandomCrop
 from imsegnet.transforms.tensor_transforms.random_flip import RandomFlip
 
 
-def run(opts: dict[str, Any],
+def run(opts: Dict[str, Any],
         step_size: int,
         gamma: float,
         batch_size: int,
@@ -48,8 +48,8 @@ def run(opts: dict[str, Any],
     model.load_state_dict(save_dir)
     model.to(device)
 
-    train_tensor_transforms: list[TransformInterface] = []
-    test_tensor_transforms: list[TransformInterface] = []
+    train_tensor_transforms: List[TransformInterface] = []
+    test_tensor_transforms: List[TransformInterface] = []
     if use_differentiate:
         train_tensor_transforms.append(Differentiate())
         test_tensor_transforms.append(Differentiate())
