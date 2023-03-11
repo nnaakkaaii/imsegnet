@@ -1,12 +1,14 @@
 from abc import ABCMeta, abstractmethod
-from typing import Any
 from pathlib import Path
 
 from torch import Tensor, nn, optim
 
 
 class Option:
-    pass
+    @classmethod
+    @abstractmethod
+    def with_default(cls, **kwargs) -> 'Option':
+        pass
 
 
 class Interface(metaclass=ABCMeta):

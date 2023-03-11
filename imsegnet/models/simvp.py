@@ -28,14 +28,13 @@ class SimVPOption(Option):
         self.groups = 8
 
     @classmethod
-    def with_default(cls,
-                     in_shape: tuple[int, ...],
-                     lr: float,
-                     **kwargs,
-                     ) -> 'SimVPOption':
+    def with_default(cls, **kwargs) -> 'SimVPOption':
         o = cls()
         o.set_default()
-        o.in_shape = in_shape
+        if "in_shape" in kwargs:
+            o.in_shape = kwargs["in_shape"]
+        else:
+            raise ValueError("in_shape is required")
         if "in_channels" in kwargs:
             o.in_channels = kwargs["in_channels"]
         if "inner_channels" in kwargs:
@@ -48,7 +47,10 @@ class SimVPOption(Option):
             o.kernels = kwargs["kernels"]
         if "groups" in kwargs:
             o.groups = kwargs["groups"]
-        o.lr = lr
+        if "lr" in kwargs:
+            o.lr = kwargs["lr"]
+        else:
+            raise ValueError("lr is required")
         return o
 
 
