@@ -1,4 +1,5 @@
 import random
+from typing import List
 
 from torch import Tensor
 from torchvision.transforms import functional as tf
@@ -7,7 +8,7 @@ from .interface import Interface
 
 
 class RandomFlip(Interface):
-    def forward(self, x: list[Tensor]) -> list[Tensor]:
+    def forward(self, x: List[Tensor]) -> List[Tensor]:
         if random.random() > 0.5:
             return [tf.hflip(x_) for x_ in x]
         return x

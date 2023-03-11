@@ -1,3 +1,5 @@
+from typing import List
+
 import torch
 from PIL.Image import Image
 from torch import Tensor
@@ -7,8 +9,8 @@ from ..interface import Interface
 
 
 class ToTensor(Interface):
-    def forward(self, x: list[Image]) -> list[Tensor]:
-        ret: list[Tensor] = []
+    def forward(self, x: List[Image]) -> List[Tensor]:
+        ret: List[Tensor] = []
         for x_ in x:
             y = to_tensor(x_)
             if y.dim() == 2:

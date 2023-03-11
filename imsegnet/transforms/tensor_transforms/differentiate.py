@@ -1,3 +1,5 @@
+from typing import List
+
 import torch
 from torch import Tensor
 
@@ -5,17 +7,17 @@ from .interface import Interface
 
 
 class Differentiate(Interface):
-    def forward(self, x: list[Tensor]) -> list[Tensor]:
+    def forward(self, x: List[Tensor]) -> List[Tensor]:
         y = torch.zeros_like(x[0])
-        ys: list[Tensor] = []
+        ys: List[Tensor] = []
         for x_ in x:
             ys.append(x_ - y)
             y = x_
         return ys
 
-    def backward(self, x: list[Tensor]) -> list[Tensor]:
+    def backward(self, x: List[Tensor]) -> List[Tensor]:
         y = torch.zeros_like(x[0])
-        ys: list[Tensor] = []
+        ys: List[Tensor] = []
         for x_ in x:
             ys.append(x_ + y)
             y = x_ + y

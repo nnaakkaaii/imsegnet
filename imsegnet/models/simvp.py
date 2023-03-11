@@ -1,8 +1,9 @@
 import os
 from pathlib import Path
+from typing import List, Tuple
 
 import torch
-from torch import nn, Tensor, optim
+from torch import Tensor, nn, optim
 from torch.nn import DataParallel
 
 from ..networks.simvp import SimVP
@@ -10,12 +11,12 @@ from .interface import Interface, Option
 
 
 class SimVPOption(Option):
-    in_shape: tuple[int, ...]
+    in_shape: Tuple[int, ...]
     in_channels: int
     inner_channels: int
     num_strides: int
     num_layers: int
-    kernels: list[int]
+    kernels: List[int]
     groups: int
     lr: float
 

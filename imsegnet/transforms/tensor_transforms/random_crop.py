@@ -1,3 +1,5 @@
+from typing import List
+
 from torch import Tensor
 from torchvision import transforms
 from torchvision.transforms import functional as tf
@@ -6,7 +8,7 @@ from .interface import Interface
 
 
 class RandomCrop(Interface):
-    def forward(self, x: list[Tensor]) -> list[Tensor]:
+    def forward(self, x: List[Tensor]) -> List[Tensor]:
         _, w, h = x[0].size()
         assert w == h
         p = transforms.RandomCrop.get_params(x[0], output_size=(w, h))

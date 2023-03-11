@@ -1,3 +1,5 @@
+from typing import List, Optional
+
 from torch import Tensor
 from torchvision import transforms
 from torchvision.transforms import functional as tf
@@ -14,11 +16,11 @@ class RandomAffine(Interface):
 
     def __init__(
             self,
-            degree: int | None = None,
-            translate_x: float | None = None,
-            translate_y: float | None = None,
-            scale_min: float | None = None,
-            scale_max: float | None = None,
+            degree: Optional[int] = None,
+            translate_x: Optional[float] = None,
+            translate_y: Optional[float] = None,
+            scale_min: Optional[float] = None,
+            scale_max: Optional[float] = None,
     ) -> None:
         self.degree = [-self.DEGREE, self.DEGREE]
         self.translate = [self.TRANSLATE_X, self.TRANSLATE_Y]
@@ -35,7 +37,7 @@ class RandomAffine(Interface):
         if scale_max is not None:
             self.scale[1] = scale_max
 
-    def forward(self, x: list[Tensor]) -> list[Tensor]:
+    def forward(self, x: List[Tensor]) -> List[Tensor]:
         _, w, h = x[0].size()
         p = transforms.RandomAffine.get_params(
             degrees=self.degree,

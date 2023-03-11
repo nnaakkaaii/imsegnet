@@ -1,4 +1,6 @@
-from torch import nn, Tensor
+from typing import List
+
+from torch import Tensor, nn
 
 from .conv2d import GroupConv2d
 
@@ -18,7 +20,7 @@ class InceptionSC(nn.Module):
             in_channels: int,
             inner_channels: int,
             out_channels: int,
-            kernels: list[int],
+            kernels: List[int],
             groups: int = 8,
     ) -> None:
         super().__init__()

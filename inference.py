@@ -1,5 +1,5 @@
-import os
 import json
+import os
 from pathlib import Path
 
 import torch
@@ -10,8 +10,8 @@ from tqdm import tqdm
 
 from imsegnet.datasets.moving_mnist import MovingMNIST
 from imsegnet.models import models, options
-from imsegnet.transforms.tensor_transforms.normalize import Normalize
 from imsegnet.transforms.tensor_transforms.differentiate import Differentiate
+from imsegnet.transforms.tensor_transforms.normalize import Normalize
 
 
 def run(save_dir: Path,

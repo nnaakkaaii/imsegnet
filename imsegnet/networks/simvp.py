@@ -1,11 +1,13 @@
+from typing import List, Optional, Tuple
+
 import torch
-from torch import nn, Tensor
+from torch import Tensor, nn
 
 from .conv2d import ConvSC
 from .inception import InceptionSC
 
 
-def stride_generator(n: int, reverse: bool = False) -> list[int]:
+def stride_generator(n: int, reverse: bool = False) -> List[int]:
     strides = [1, 2] * 10
     if reverse:
         return list(reversed(strides[:n]))
@@ -35,7 +37,7 @@ class SimVPEncoder(nn.Module):
             for stride in strides[1:]
             ])
 
-    def forward(self, x: Tensor) -> tuple[Tensor, Tensor]:
+    def forward(self, x: Tensor) -> Tuple[Tensor, Tensor]:
         enc = self.layer(x)
         latent = enc
         for layer in self.layers:
@@ -76,7 +78,7 @@ class SimVPDecoder(nn.Module):
     def forward(
             self,
             latent: Tensor,
-            enc: Tensor | None = None,
+            enc: Optional[Tensor] = None,
     ) -> None:
         for layer in self.layers:
             latent = layer(latent)
@@ -93,7 +95,7 @@ class SimVPXnet(nn.Module):
             in_channels: int,
             inner_channels: int,
             num_layers: int,
-            kernels: list[int],
+            kernels: List[int],
             groups: int = 8,
     ) -> None:
         super().__init__()
@@ -148,7 +150,7 @@ class SimVPXnet(nn.Module):
         x = x.reshape(b, t * c, h, w)
 
         # encoder
-        skips: list[Tensor] = []
+        skips: List[Tensor] = []
         for layer in self.encoder:
             x = layer(x)
             skips.append(x)
@@ -167,12 +169,12 @@ class SimVPXnet(nn.Module):
 class SimVP(nn.Module):
     def __init__(
             self,
-            in_shape: tuple[int, ...],
+            in_shape: Tuple[int, ...],
             in_channels: int,
             inner_channels: int,
             num_strides: int,
             num_layers: int,
-            kernels: list[int],
+            kernels: List[int],
             groups: int,
     ) -> None:
         super().__init__()

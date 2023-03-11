@@ -1,3 +1,5 @@
+from typing import List
+
 from torch import Tensor
 from torchvision import transforms
 
@@ -15,10 +17,10 @@ class Normalize(Interface):
             transforms.Normalize(tuple(-i for i in self.MEAN), (1,)),
             ])
 
-    def forward(self, x: list[Tensor]) -> list[Tensor]:
+    def forward(self, x: List[Tensor]) -> List[Tensor]:
         return [self.normalize(_x) for _x in x]
 
-    def backward(self, x: list[Tensor]) -> list[Tensor]:
+    def backward(self, x: List[Tensor]) -> List[Tensor]:
         return [self.unnormalize(_x) for _x in x]
 
 
