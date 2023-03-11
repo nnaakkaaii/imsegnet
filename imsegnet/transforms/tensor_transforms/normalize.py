@@ -30,13 +30,13 @@ if __name__ == "__main__":
                     pil_transforms=[],
                     tensor_transforms=[],
                     )
-    d, _ = next(iter(s))
-    print(d.shape)
-    print(d.min(), d.max())
+    d = next(iter(s))
+    print(d["x"].shape)
+    print(d["x"].min(), d["x"].max())
     s = MovingMNIST(root_dir="./data",
                     pil_transforms=[],
                     tensor_transforms=[Normalize()],
                     )
-    d, _ = next(iter(s))
-    print(d.shape)
-    print(d.min(), d.max())
+    d = next(iter(s))
+    print(d["x"].shape)
+    print(d["x"].min(), d["x"].max())

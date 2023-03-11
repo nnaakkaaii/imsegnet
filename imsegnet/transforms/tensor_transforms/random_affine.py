@@ -53,5 +53,5 @@ if __name__ == "__main__":
     s = MovingMNIST(root_dir="./data",
                     tensor_transforms=[RandomAffine()],
                     )
-    d, _ = next(iter(s))
-    print(d.shape)
+    d = next(iter(s))
+    print(d["x"].shape)

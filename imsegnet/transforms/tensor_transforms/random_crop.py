@@ -17,5 +17,5 @@ if __name__ == "__main__":
     # python3 -m imsegnet.transforms.tensor_transforms.random_crop
     from ...datasets.moving_mnist import MovingMNIST
     s = MovingMNIST(root_dir="./data", tensor_transforms=[RandomCrop()])
-    d, _ = next(iter(s))
-    print(d.shape)
+    d = next(iter(s))
+    print(d["x"].shape)
