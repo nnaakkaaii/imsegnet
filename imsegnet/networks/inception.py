@@ -1,5 +1,3 @@
-from typing import Optional
-
 from torch import nn, Tensor
 
 from .conv2d import GroupConv2d

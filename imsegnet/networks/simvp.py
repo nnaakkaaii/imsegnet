@@ -1,5 +1,3 @@
-from typing import Optional
-
 import torch
 from torch import nn, Tensor
 
@@ -78,7 +76,7 @@ class SimVPDecoder(nn.Module):
     def forward(
             self,
             latent: Tensor,
-            enc: Optional[Tensor] = None,
+            enc: Tensor | None = None,
     ) -> None:
         for layer in self.layers:
             latent = layer(latent)
