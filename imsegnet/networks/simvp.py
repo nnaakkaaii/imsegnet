@@ -170,18 +170,14 @@ class SimVP(nn.Module):
     def __init__(
             self,
             in_shape: tuple[int, ...],
-            in_channels: int = 16,
-            inner_channels: int = 256,
-            num_strides: int = 4,
-            num_layers: int = 8,
-            kernels: Optional[list[int]] = None,
-            groups: int = 8,
+            in_channels: int,
+            inner_channels: int,
+            num_strides: int,
+            num_layers: int,
+            kernels: list[int],
+            groups: int,
     ) -> None:
         super().__init__()
-
-        _kernels: list[int] = []
-        if kernels is not None:
-            _kernels = kernels
 
         t, _, _ = in_shape
         self.encoder = SimVPEncoder(
@@ -193,7 +189,7 @@ class SimVP(nn.Module):
             t * in_channels,
             inner_channels,
             num_layers,
-            _kernels,
+            kernels,
             groups,
             )
         self.decoder = SimVPDecoder(
@@ -219,6 +215,13 @@ class SimVP(nn.Module):
 
 if __name__ == "__main__":
     # python3 -m imsegnet.networks.simvp
-    net = SimVP((10, 64, 64), kernels=[3, 5])
+    net = SimVP((10, 64, 64),
+                in_channels=16,
+                inner_channels=256,
+                num_strides=4,
+                num_layers=8,
+                kernels=[3, 5],
+                groups=8,
+                )
     out = net(torch.randn(16, 10, 64, 64))
     print(out.shape)
