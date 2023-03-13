@@ -17,6 +17,7 @@ from imsegnet.transforms.tensor_transforms.normalize import Normalize
 def run(save_dir: Path,
         model_name: str,
         num_samples: int,
+        use_differentiate: bool,
         ) -> None:
     os.makedirs(save_dir / "inference", exist_ok=True)
     device = "cuda:0" if torch.cuda.is_available() else "cpu"
@@ -35,9 +36,11 @@ def run(save_dir: Path,
     differentiate = Differentiate()
     normalize = Normalize()
 
+    tensor_transforms = [differentiate, normalize] if use_differentiate else [normalize]
+
     test_set = MovingMNIST(
         root_dir="./data",
-        tensor_transforms=[differentiate, normalize],
+        tensor_transforms=tensor_transforms,
         phase="test",
         )
     test_loader = DataLoader(
@@ -60,11 +63,13 @@ def run(save_dir: Path,
 
             ys = x + y
             ys = normalize.backward(ys)
-            ys = differentiate.backward(ys)
+            if use_differentiate:
+                ys = differentiate.backward(ys)
 
             ts = x + t
             ts = normalize.backward(ts)
-            ts = differentiate.backward(ts)
+            if use_differentiate:
+                ts = differentiate.backward(ts)
 
             rs = torch.unsqueeze(torch.cat(ts + ys, dim=0), dim=1)
             img = make_grid(rs, nrow=20)
@@ -87,9 +92,13 @@ if __name__ == "__main__":
                         type=int,
                         default=10,
                         )
+    parser.add_argument("--use_differentiate",
+                        action="store_true",
+                        )
     args = parser.parse_args()
 
     run(Path(args.save_dir),
         args.model_name,
         args.num_samples,
+        args.use_differentiate,
         )
